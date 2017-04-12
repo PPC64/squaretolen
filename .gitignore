@@ -1,0 +1,9 @@
+asm.dbg.main
+asm.main
+dbg.main
+main
+.*.sw[po]
+main.perf
+main.perf.dat
+asm.main.perf
+asm.main.perf.dat
