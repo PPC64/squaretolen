@@ -15,7 +15,7 @@ int32_t* SquareToLen(int32_t *in, int in_len, int32_t *out, int out_len) {
 
   asm volatile (
       // Store the squares, right shifted one bit (i.e., divided by 2)
-      "subi    %[out_aux],   %[out],     4\n\t"
+      "subi    %[out_aux],   %[out],     8\n\t"
       "subi    %[in_aux],    %[in],      4\n\t"
       "cmpwi   %[in_len],    0\n\t"
       "ble     SKIP_LOOP_SQUARE\n\t"    // in_len <= 0
@@ -29,10 +29,10 @@ int32_t* SquareToLen(int32_t *in, int in_len, int32_t *out, int out_len) {
       // shift right 33 bits without sign extension
       "srdi    %[product_s], %[product], 33\n\t"
       "or      %[product_s], %[lplw_s],  %[product_s]\n\t"
-      "stwu    %[product_s],  4(%[out_aux])\n\t"
       "mr      %[lplw],      %[product]\n\t"
-      "srdi    %[product],   %[product], 1\n\t"
-      "stwu    %[product],    4(%[out_aux])\n\t"
+      "rldicr  %[product],   %[product], 31, 31\n\t"
+      "or      %[product],   %[product], %[product_s]\n\t"
+      "stdu    %[product],    8(%[out_aux])\n\t"
       "bdnz    LOOP_SQUARE\n\t"
       "\n\t"
       "SKIP_LOOP_SQUARE:\n\t"
